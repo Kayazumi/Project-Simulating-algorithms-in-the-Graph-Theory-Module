@@ -36,9 +36,19 @@ var NODE_R = 24;
 // HOME PAGE RENDERING
 // ===================================================
 function renderHome() {
-  const grid = document.getElementById('algo-grid');
-  grid.innerHTML = ALGORITHMS.map(algo => {
-    const dots = [1,2,3].map(i =>
+  const CATEGORIES = [
+    {
+      title: 'Duyệt đồ thị cơ bản',
+      ids: ['dfs', 'bfs']
+    },
+    {
+      title: 'Thuật toán trọng số & Cây khung',
+      ids: ['dijkstra', 'bellman', 'prim']
+    }
+  ];
+
+  function renderCard(algo) {
+    const dots = [1, 2, 3].map(i =>
       `<div class="diff-dot" style="background:${i <= algo.difficulty ? algo.color : 'var(--border)'}"></div>`
     ).join('');
     const diffLabel = ['', 'Cơ bản', 'Trung cấp', 'Nâng cao'][algo.difficulty];
@@ -49,14 +59,11 @@ function renderHome() {
     return `
     <div class="algo-card" style="--card-color:${algo.color}" onclick="openSim('${algo.id}')">
       <div class="card-header">
-        <div class="card-icon" style="background:${algo.bg}">
-          <span style="font-size:1.4rem">${algo.icon}</span>
+        <div>
+          <div class="card-title">${algo.name}</div>
+          <div class="card-full-name">${algo.fullName}</div>
         </div>
         <span class="card-complexity">${algo.complexity}</span>
-      </div>
-      <div>
-        <div class="card-title">${algo.name}</div>
-        <div class="card-full-name">${algo.fullName}</div>
       </div>
       <div class="card-desc">${algo.desc}</div>
       <div class="card-tags">${tags}</div>
@@ -73,6 +80,21 @@ function renderHome() {
         </div>
       </div>
     </div>`;
+  }
+
+  const container = document.getElementById('algo-grid');
+  container.innerHTML = CATEGORIES.map(cat => {
+    const cards = cat.ids
+      .map(id => ALGORITHMS.find(a => a.id === id))
+      .filter(Boolean)
+      .map(renderCard)
+      .join('');
+
+    return `
+    <section class="algo-section">
+      <h2 class="section-title">${cat.title}</h2>
+      <div class="section-grid">${cards}</div>
+    </section>`;
   }).join('');
 }
 
@@ -87,7 +109,7 @@ function openSim(algoId) {
 
   // Update header
   const badge = document.getElementById('sim-algo-badge');
-  badge.innerHTML = `<span style="font-size:1.2rem">${currentAlgo.icon}</span> ${currentAlgo.name}`;
+  badge.innerHTML = `<span class="badge-dot" style="background:${currentAlgo.color}"></span>${currentAlgo.name}`;
   badge.style.background = currentAlgo.bg;
   badge.style.color = currentAlgo.color;
   badge.style.border = `1px solid ${currentAlgo.color}40`;
@@ -151,7 +173,7 @@ function initCanvas() {
 
   window.addEventListener('keydown', onKeyDown);
 
-  document.getElementById('speed-slider').addEventListener('input', function() {
+  document.getElementById('speed-slider').addEventListener('input', function () {
     document.getElementById('speed-label').textContent = SPEED_LABELS[this.value];
     if (isPlaying) {
       clearInterval(playTimer);

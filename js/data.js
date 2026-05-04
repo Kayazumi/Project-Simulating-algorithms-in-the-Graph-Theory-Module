@@ -1,6 +1,12 @@
 // ===================================================
 // DATA: Algorithm definitions
 // ===================================================
+
+// Shared SVG attribute shorthand (used inline below)
+// All icons: width="24" height="24" viewBox="0 0 24 24"
+//            fill="none" stroke="currentColor"
+//            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+
 const ALGORITHMS = [
   {
     id: 'dfs',
@@ -16,7 +22,13 @@ const ALGORITHMS = [
     features: ['Đồ thị có hướng/vô hướng', 'Phát hiện chu trình', 'Thành phần liên thông'],
     supportsNeg: true,
     weighted: false,
-    icon: '🔍',
+    // git-branch: represents recursive branching / going deep into a tree
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" y1="3" x2="6" y2="15"/>
+      <circle cx="18" cy="6" r="3"/>
+      <circle cx="6" cy="18" r="3"/>
+      <path d="M18 9a9 9 0 0 1-9 9"/>
+    </svg>`,
     directed: false
   },
   {
@@ -33,7 +45,12 @@ const ALGORITHMS = [
     features: ['Đường ngắn nhất (unweighted)', 'Duyệt theo lớp', 'Thành phần liên thông'],
     supportsNeg: true,
     weighted: false,
-    icon: '🌊',
+    // layers: represents level-by-level (BFS layer expansion)
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+      <polyline points="2 17 12 22 22 17"/>
+      <polyline points="2 12 12 17 22 12"/>
+    </svg>`,
     directed: false
   },
   {
@@ -50,7 +67,14 @@ const ALGORITHMS = [
     features: ['Đường ngắn nhất có trọng số', 'Chỉ cạnh dương', 'Priority Queue'],
     supportsNeg: false,
     weighted: true,
-    icon: '🎯',
+    // crosshair: represents targeting / finding the optimal destination
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="22" y1="12" x2="18" y2="12"/>
+      <line x1="6"  y1="12" x2="2"  y2="12"/>
+      <line x1="12" y1="6"  x2="12" y2="2"/>
+      <line x1="12" y1="22" x2="12" y2="18"/>
+    </svg>`,
     directed: true,
     needsTarget: true
   },
@@ -68,7 +92,10 @@ const ALGORITHMS = [
     features: ['Cạnh âm OK', 'Phát hiện chu trình âm', 'Tối ưu từng vòng lặp'],
     supportsNeg: true,
     weighted: true,
-    icon: '⚡',
+    // activity: zigzag pulse line — represents iterative relaxation over all edges
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    </svg>`,
     directed: true,
     needsTarget: false
   },
@@ -86,7 +113,14 @@ const ALGORITHMS = [
     features: ['Cây khung nhỏ nhất', 'Đồ thị liên thông', 'Hàng đợi ưu tiên'],
     supportsNeg: false,
     weighted: true,
-    icon: '🌳',
+    // share-2: hub node radiating edges to others — perfect for MST / spanning tree
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="5"  r="3"/>
+      <circle cx="6"  cy="12" r="3"/>
+      <circle cx="18" cy="19" r="3"/>
+      <line x1="8.59"  y1="13.51" x2="15.42" y2="17.49"/>
+      <line x1="15.41" y1="6.51"  x2="8.59"  y2="10.49"/>
+    </svg>`,
     directed: false
   }
 ];

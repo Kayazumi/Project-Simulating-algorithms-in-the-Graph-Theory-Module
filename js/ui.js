@@ -6,10 +6,10 @@
 // CANVAS INTERACTION
 // ===================================================
 function getNodeAt(x, y) {
-  for (let i = nodes.length-1; i >= 0; i--) {
+  for (let i = nodes.length - 1; i >= 0; i--) {
     const n = nodes[i];
     const dx = x - n.x, dy = y - n.y;
-    if (Math.sqrt(dx*dx+dy*dy) <= NODE_R) return n;
+    if (Math.sqrt(dx * dx + dy * dy) <= NODE_R) return n;
   }
   return null;
 }
@@ -21,7 +21,7 @@ function getEdgeAt(x, y) {
     if (!from || !to) continue;
     const mx = (from.x + to.x) / 2, my = (from.y + to.y) / 2;
     const dx = x - mx, dy = y - my;
-    if (Math.sqrt(dx*dx+dy*dy) < 20) return e;
+    if (Math.sqrt(dx * dx + dy * dy) < 20) return e;
   }
   return null;
 }
@@ -79,7 +79,7 @@ function onMouseMove(e) {
     draw();
     // Draw temp edge
     ctx.save();
-    ctx.setLineDash([5,5]);
+    ctx.setLineDash([5, 5]);
     ctx.strokeStyle = '#64748B';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -91,13 +91,13 @@ function onMouseMove(e) {
 
   // Cursor
   if (mode === 'select') {
-    canvas.style.cursor = getNodeAt(x,y) ? 'grab' : 'default';
+    canvas.style.cursor = getNodeAt(x, y) ? 'grab' : 'default';
   } else if (mode === 'delete') {
-    canvas.style.cursor = (getNodeAt(x,y) || getEdgeAt(x,y)) ? 'pointer' : 'not-allowed';
+    canvas.style.cursor = (getNodeAt(x, y) || getEdgeAt(x, y)) ? 'pointer' : 'not-allowed';
   } else if (mode === 'addNode') {
     canvas.style.cursor = 'crosshair';
   } else if (mode === 'addEdge') {
-    canvas.style.cursor = getNodeAt(x,y) ? 'pointer' : 'crosshair';
+    canvas.style.cursor = getNodeAt(x, y) ? 'pointer' : 'crosshair';
   }
 }
 
@@ -148,8 +148,8 @@ function onCanvasClick(e) {
       if (edgeStart) { edgeStart.connecting = false; edgeStart = null; draw(); }
     }
   } else if (mode === 'delete') {
-    if (node) { removeNode(node.id); simSteps=[]; currentStep=-1; updateUI(); }
-    else if (edge) { removeEdge(edge.id); simSteps=[]; currentStep=-1; updateUI(); }
+    if (node) { removeNode(node.id); simSteps = []; currentStep = -1; updateUI(); }
+    else if (edge) { removeEdge(edge.id); simSteps = []; currentStep = -1; updateUI(); }
   }
 }
 
@@ -205,7 +205,7 @@ function confirmEdge() {
 
   if (pendingEdge.editId !== undefined) {
     const e = edges.find(ed => ed.id === pendingEdge.editId);
-    if (e) { e.weight = validW; simSteps=[]; currentStep=-1; updateUI(); draw(); }
+    if (e) { e.weight = validW; simSteps = []; currentStep = -1; updateUI(); draw(); }
   } else if (pendingEdge) {
     addEdge(pendingEdge.from, pendingEdge.to, validW);
     simSteps = [];
@@ -263,7 +263,7 @@ function runAlgorithm() {
 
   if (isPlaying) { clearInterval(playTimer); isPlaying = false; }
 
-  switch(currentAlgo.id) {
+  switch (currentAlgo.id) {
     case 'dfs': generateDFS(startId); break;
     case 'bfs': generateBFS(startId); break;
     case 'dijkstra': generateDijkstra(startId); break;
@@ -272,13 +272,12 @@ function runAlgorithm() {
   }
 
   if (simSteps.length > 0) {
-    currentStep = 0;
+    addLog(`Bắt đầu ${currentAlgo.name} từ nút ${nodes.find(n => n.id === startId)?.label}`, 'info');
+
+    // Áp dụng ngay bước cuối để hiển thị kết quả và ghi log hoàn thành
+    currentStep = simSteps.length - 1;
     applyStep(currentStep);
     updateUI();
-    addLog(`Bắt đầu ${currentAlgo.name} từ nút ${nodes.find(n=>n.id===startId)?.label}`, 'info');
-
-    // Auto-start playback
-    togglePlay();
   }
 }
 
@@ -316,8 +315,8 @@ function updateDataInspector(step) {
     const label = currentAlgo.id === 'dfs' ? 'Ngăn xếp (Stack)' : 'Hàng đợi (Queue)';
     const color = currentAlgo.color;
     const items = step.queue.map(id => {
-      const n = nodes.find(nd=>nd.id===id);
-      return `<div class="queue-item" style="background:${currentAlgo.bg};color:${color};border-color:${color}50">${n?.label||id}</div>`;
+      const n = nodes.find(nd => nd.id === id);
+      return `<div class="queue-item" style="background:${currentAlgo.bg};color:${color};border-color:${color}50">${n?.label || id}</div>`;
     }).join('');
     html += `
       <div class="inspector-section">
@@ -337,7 +336,7 @@ function updateDataInspector(step) {
       return `<tr${highlight}>
         <td>${n.label}</td>
         <td class="${cls}">${d === Infinity ? '∞' : d}</td>
-        <td>${n.prev !== null && n.prev !== undefined ? nodes.find(nd=>nd.id===n.prev)?.label||'-' : '-'}</td>
+        <td>${n.prev !== null && n.prev !== undefined ? nodes.find(nd => nd.id === n.prev)?.label || '-' : '-'}</td>
       </tr>`;
     }).join('');
     html += `
@@ -362,17 +361,17 @@ function updateDataInspector(step) {
             Tổng trọng số: <strong>${step.mstCost}</strong>
           </div>
           <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px">
-            ${nodes.filter(n=>n.state==='path'||n.state==='visited').length} / ${nodes.length} nút trong MST
+            ${nodes.filter(n => n.state === 'path' || n.state === 'visited').length} / ${nodes.length} nút trong MST
           </div>
         </div>
       </div>`;
   }
 
   // Node states summary
-  const unvisited = nodes.filter(n=>n.state==='unvisited').length;
-  const active = nodes.filter(n=>n.state==='active').length;
-  const visited = nodes.filter(n=>n.state==='visited').length;
-  const pathN = nodes.filter(n=>n.state==='path').length;
+  const unvisited = nodes.filter(n => n.state === 'unvisited').length;
+  const active = nodes.filter(n => n.state === 'active').length;
+  const visited = nodes.filter(n => n.state === 'visited').length;
+  const pathN = nodes.filter(n => n.state === 'path').length;
   html += `
     <div class="inspector-section">
       <div class="inspector-title">Trạng thái nút</div>
@@ -393,8 +392,25 @@ function updateDataInspector(step) {
 // PLAYBACK
 // ===================================================
 function togglePlay() {
-  if (simSteps.length === 0) { runAlgorithm(); return; }
-  isPlaying = !isPlaying;
+  if (simSteps.length === 0) {
+    runAlgorithm();
+    // runAlgorithm() đã nhảy tới bước cuối, reset về đầu để phát từng bước
+    if (simSteps.length > 0) {
+      currentStep = 0;
+      applyStep(0);
+      updateUI();
+    }
+    // Không return — tiếp tục xuống để khởi động interval
+  }
+
+  // Nếu đang ở bước cuối, quay lại đầu để phát lại
+  if (!isPlaying && currentStep >= simSteps.length - 1) {
+    currentStep = 0;
+    applyStep(0);
+    updateUI();
+  }
+
+  isPlaying = !isPlaying; 
   const btn = document.getElementById('btn-play');
   if (isPlaying) {
     btn.textContent = '⏸';
@@ -447,17 +463,17 @@ function updateUI() {
 
 function setMode(m) {
   mode = m;
-  ['select','add-node','add-edge','delete'].forEach(id => {
+  ['select', 'add-node', 'add-edge', 'delete'].forEach(id => {
     const el = document.getElementById('btn-' + id);
     if (el) el.classList.remove('active');
   });
-  const map = { select:'btn-select', addNode:'btn-add-node', addEdge:'btn-add-edge', delete:'btn-delete' };
+  const map = { select: 'btn-select', addNode: 'btn-add-node', addEdge: 'btn-add-edge', delete: 'btn-delete' };
   const el = document.getElementById(map[m]);
   if (el) el.classList.add('active');
 
   if (m !== 'addEdge' && edgeStart) { edgeStart.connecting = false; edgeStart = null; draw(); }
 
-  const cursors = { select:'default', addNode:'crosshair', addEdge:'crosshair', delete:'not-allowed' };
+  const cursors = { select: 'default', addNode: 'crosshair', addEdge: 'crosshair', delete: 'not-allowed' };
   canvas.style.cursor = cursors[m] || 'default';
 }
 
@@ -476,17 +492,17 @@ function updateDirectedBtn() {
 }
 
 function switchTab(tab) {
-  ['code','data','log'].forEach(t => {
-    document.getElementById('panel-'+t).style.display = t===tab ? 'block' : 'none';
-    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+  ['code', 'data', 'log'].forEach(t => {
+    document.getElementById('panel-' + t).style.display = t === tab ? 'block' : 'none';
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
   });
 }
 
-function addLog(msg, type='info') {
+function addLog(msg, type = 'info') {
   const log = document.getElementById('step-log');
   const entry = document.createElement('div');
   entry.className = `log-entry ${type}`;
-  const time = new Date().toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const time = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   entry.textContent = `[${time}] ${msg}`;
   log.appendChild(entry);
   log.scrollTop = log.scrollHeight;
@@ -502,7 +518,7 @@ function showWarning(msg) {
 function onStartNodeChange() {
   simSteps = [];
   currentStep = -1;
-  nodes.forEach(n => { n.state='unvisited'; n.dist=Infinity; n.prev=null; });
+  nodes.forEach(n => { n.state = 'unvisited'; n.dist = Infinity; n.prev = null; });
   edges.forEach(e => e.state = e.weight < 0 ? 'negative' : 'default');
   updateUI();
   draw();
@@ -519,7 +535,7 @@ function onEndNodeChange() {
 // ===================================================
 function onKeyDown(e) {
   const tag = e.target.tagName;
-  if (tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA') return;
+  if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
 
   if (e.key === 'ArrowRight' || e.key === 'l') { e.preventDefault(); stepForward(); }
   else if (e.key === 'ArrowLeft' || e.key === 'h') { e.preventDefault(); stepBackward(); }
