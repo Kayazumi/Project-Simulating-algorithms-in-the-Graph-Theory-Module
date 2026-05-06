@@ -259,6 +259,7 @@ function runAlgorithm() {
   const startId = parseInt(document.getElementById('start-node-select').value);
   simSteps = [];
   currentStep = -1;
+  algorithmResult = [];
   document.getElementById('step-log').innerHTML = '';
 
   if (isPlaying) { clearInterval(playTimer); isPlaying = false; }
@@ -315,6 +316,20 @@ function applyStep(idx) {
     if (s) e.state = s;
   });
 
+  if (idx === simSteps.length - 1 && (currentAlgo.id === 'dfs' || currentAlgo.id === 'bfs')) {
+    algorithmResult = [];
+    let visitedSet = new Set();
+    for (let i = 0; i <= idx; i++) {
+      const state = simSteps[i].nodeStates;
+      for (const n of nodes) {
+        if (state[n.id] && state[n.id].state === 'visited' && !visitedSet.has(n.id)) {
+          visitedSet.add(n.id);
+          algorithmResult.push(n.label);
+        }
+      }
+    }
+  }
+
   highlightCodeLine(step.codeLine);
   updateDataInspector(step);
   if (step.log) addLog(step.log, step.logType || 'info');
@@ -324,9 +339,27 @@ function applyStep(idx) {
 // ===================================================
 // DATA INSPECTOR
 // ===================================================
+function renderAlgorithmResultPanel(resultData) {
+  const content = (resultData && resultData.length > 0)
+    ? `<div style="font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--accent);font-weight:600;word-break:break-all;line-height:1.5;">${resultData.join(' &rarr; ')}</div>`
+    : `<span style="color:var(--text-muted);font-size:0.75rem">Chưa có kết quả</span>`;
+
+  return `
+    <div class="inspector-section">
+      <div class="inspector-title">KẾT QUẢ THUẬT TOÁN</div>
+      <div class="inspector-body">
+        ${content}
+      </div>
+    </div>`;
+}
+
 function updateDataInspector(step) {
   const inspector = document.getElementById('data-inspector');
   let html = '';
+
+  if (currentAlgo.id === 'dfs' || currentAlgo.id === 'bfs') {
+    html += renderAlgorithmResultPanel(algorithmResult);
+  }
 
   // Queue/Stack
   if (step.queue !== undefined) {
@@ -375,7 +408,7 @@ function updateDataInspector(step) {
       <div class="inspector-section">
         <div class="inspector-title">MST</div>
         <div class="inspector-body">
-          <div style="font-family:'Fira Code',monospace;font-size:0.8rem;color:var(--node-path)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--node-path)">
             Tổng trọng số: <strong>${step.mstCost}</strong>
           </div>
           <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px">

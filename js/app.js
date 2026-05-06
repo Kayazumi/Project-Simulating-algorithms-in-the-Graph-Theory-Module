@@ -23,6 +23,7 @@ var playTimer = null;
 // Simulation steps
 var simSteps = [];
 var currentStep = -1;
+var algorithmResult = [];
 
 // Canvas
 var canvas, ctx;

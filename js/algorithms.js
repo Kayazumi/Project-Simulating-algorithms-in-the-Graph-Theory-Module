@@ -3,7 +3,7 @@
 // ===================================================
 
 // --- Step snapshot helper ---
-function snapshot(codeLine, log, logType='info', extras={}) {
+function snapshot(codeLine, log, logType = 'info', extras = {}) {
   const nodeStates = {};
   nodes.forEach(n => nodeStates[n.id] = { state: n.state, dist: n.dist !== undefined ? n.dist : Infinity, prev: n.prev !== undefined ? n.prev : null });
   const edgeStates = {};
@@ -34,19 +34,19 @@ function generateDFS(startId) {
   edges.forEach(e => e.state = 'default');
 
   function restoreState(nStates, eStates) {
-    nodes.forEach(n => { const s = nStates[n.id]; if(s){n.state=s.state;} });
-    edges.forEach(e => { const s = eStates[e.id]; if(s){e.state=s;} });
+    nodes.forEach(n => { const s = nStates[n.id]; if (s) { n.state = s.state; } });
+    edges.forEach(e => { const s = eStates[e.id]; if (s) { e.state = s; } });
   }
 
   // Simulate
   const stackArr = [startId];
-  nodes.find(n=>n.id===startId).state = 'active';
-  snapshot(1, `Khởi tạo ngăn xếp với ${nodes.find(n=>n.id===startId).label}`, 'info', { queue: [startId] });
+  nodes.find(n => n.id === startId).state = 'active';
+  snapshot(1, `Khởi tạo ngăn xếp với ${nodes.find(n => n.id === startId).label}`, 'info', { queue: [startId] });
 
   while (stackArr.length > 0) {
-    const cur = stackArr[stackArr.length-1];
+    const cur = stackArr[stackArr.length - 1];
     stackArr.pop();
-    const curNode = nodes.find(n=>n.id===cur);
+    const curNode = nodes.find(n => n.id === cur);
 
     snapshot(4, `Lấy nút ${curNode.label} từ ngăn xếp`, 'info', { queue: [...stackArr] });
 
@@ -66,10 +66,10 @@ function generateDFS(startId) {
     const neighbors = edges
       .filter(e => e.from === cur || (!isDirected && e.to === cur))
       .map(e => ({ id: e.from === cur ? e.to : e.from, edge: e }))
-      .filter(({id}) => !visited.has(id));
+      .filter(({ id }) => !visited.has(id));
 
     for (const { id, edge } of neighbors) {
-      const nb = nodes.find(n=>n.id===id);
+      const nb = nodes.find(n => n.id === id);
       edge.state = 'traversed';
       nb.state = 'active';
       stackArr.push(id);
@@ -96,12 +96,12 @@ function generateBFS(startId) {
 
   const visited = new Set([startId]);
   const queue = [startId];
-  nodes.find(n=>n.id===startId).state = 'active';
-  snapshot(1, `Khởi tạo hàng đợi với ${nodes.find(n=>n.id===startId).label}`, 'info', { queue: [...queue] });
+  nodes.find(n => n.id === startId).state = 'active';
+  snapshot(1, `Khởi tạo hàng đợi với ${nodes.find(n => n.id === startId).label}`, 'info', { queue: [...queue] });
 
   while (queue.length > 0) {
     const cur = queue.shift();
-    const curNode = nodes.find(n=>n.id===cur);
+    const curNode = nodes.find(n => n.id === cur);
     curNode.state = 'active';
     snapshot(4, `Lấy ${curNode.label} từ hàng đợi`, 'info', { queue: [...queue] });
 
@@ -111,11 +111,11 @@ function generateBFS(startId) {
     const neighbors = edges
       .filter(e => e.from === cur || (!isDirected && e.to === cur))
       .map(e => ({ id: e.from === cur ? e.to : e.from, edge: e }))
-      .filter(({id}) => !visited.has(id));
+      .filter(({ id }) => !visited.has(id));
 
     for (const { id, edge } of neighbors) {
       visited.add(id);
-      const nb = nodes.find(n=>n.id===id);
+      const nb = nodes.find(n => n.id === id);
       edge.state = 'traversed';
       nb.state = 'active';
       queue.push(id);
@@ -128,10 +128,10 @@ function generateBFS(startId) {
 
 // --- DIJKSTRA ---
 function generateDijkstra(startId) {
-  nodes.forEach(n => { n.state='unvisited'; n.dist=Infinity; n.prev=null; });
+  nodes.forEach(n => { n.state = 'unvisited'; n.dist = Infinity; n.prev = null; });
   edges.forEach(e => e.state = 'default');
 
-  nodes.find(n=>n.id===startId).dist = 0;
+  nodes.find(n => n.id === startId).dist = 0;
   snapshot(1, 'Khởi tạo khoảng cách: src=0, others=∞', 'info', { distances: getDistMap() });
 
   // Simple priority queue as sorted array
@@ -139,9 +139,9 @@ function generateDijkstra(startId) {
   const visited = new Set();
 
   while (pq.length > 0) {
-    pq.sort((a,b)=>a.cost-b.cost);
+    pq.sort((a, b) => a.cost - b.cost);
     const { cost, id: cur } = pq.shift();
-    const curNode = nodes.find(n=>n.id===cur);
+    const curNode = nodes.find(n => n.id === cur);
 
     if (cost > curNode.dist) {
       snapshot(5, `Bỏ qua ${curNode.label} (đã có đường tốt hơn)`, 'warning', { distances: getDistMap() });
@@ -158,7 +158,7 @@ function generateDijkstra(startId) {
     edges.filter(e => e.from === cur || (!isDirected && e.to === cur))
       .forEach(e => {
         const nbId = e.from === cur ? e.to : e.from;
-        const nb = nodes.find(n=>n.id===nbId);
+        const nb = nodes.find(n => n.id === nbId);
         if (visited.has(nbId)) return;
         const newDist = curNode.dist + e.weight;
         snapshot(8, `Xét cạnh ${curNode.label}→${nb.label} (w=${e.weight})`, 'info', { distances: getDistMap() });
@@ -195,39 +195,39 @@ function highlightShortestPath(startId) {
   const path = [];
   while (cur !== undefined && cur !== null) {
     path.unshift(cur);
-    const n = nodes.find(nd=>nd.id===cur);
+    const n = nodes.find(nd => nd.id === cur);
     if (!n || n.prev === null || n.prev === undefined) break;
     cur = n.prev;
   }
 
   path.forEach(id => {
-    const n = nodes.find(nd=>nd.id===id);
+    const n = nodes.find(nd => nd.id === id);
     if (n) n.state = 'path';
   });
 
-  for (let i=0; i<path.length-1; i++) {
-    const e = edges.find(ed => (ed.from===path[i]&&ed.to===path[i+1]) || (!isDirected&&ed.from===path[i+1]&&ed.to===path[i]));
+  for (let i = 0; i < path.length - 1; i++) {
+    const e = edges.find(ed => (ed.from === path[i] && ed.to === path[i + 1]) || (!isDirected && ed.from === path[i + 1] && ed.to === path[i]));
     if (e) e.state = 'path';
   }
 }
 
 // --- BELLMAN-FORD ---
 function generateBellman(startId) {
-  nodes.forEach(n => { n.state='unvisited'; n.dist=Infinity; n.prev=null; });
+  nodes.forEach(n => { n.state = 'unvisited'; n.dist = Infinity; n.prev = null; });
   edges.forEach(e => e.state = e.weight < 0 ? 'negative' : 'default');
 
-  nodes.find(n=>n.id===startId).dist = 0;
+  nodes.find(n => n.id === startId).dist = 0;
   snapshot(1, 'Khởi tạo: src=0, others=∞', 'info', { distances: getDistMap() });
 
   const V = nodes.length;
 
-  for (let i=1; i<=V-1; i++) {
-    snapshot(2, `Vòng lặp thứ ${i}/${V-1}`, 'info', { distances: getDistMap() });
+  for (let i = 1; i <= V - 1; i++) {
+    snapshot(2, `Vòng lặp thứ ${i}/${V - 1}`, 'info', { distances: getDistMap() });
     let changed = false;
 
     edges.forEach(e => {
-      const u = nodes.find(n=>n.id===e.from);
-      const v = nodes.find(n=>n.id===e.to);
+      const u = nodes.find(n => n.id === e.from);
+      const v = nodes.find(n => n.id === e.to);
       if (!u || !v || u.dist === Infinity) return;
 
       snapshot(4, `Xét cạnh ${u.label}→${v.label} (w=${e.weight})`, 'info', { distances: getDistMap() });
@@ -252,8 +252,8 @@ function generateBellman(startId) {
   // Check negative cycles
   let hasNegCycle = false;
   edges.forEach(e => {
-    const u = nodes.find(n=>n.id===e.from);
-    const v = nodes.find(n=>n.id===e.to);
+    const u = nodes.find(n => n.id === e.from);
+    const v = nodes.find(n => n.id === e.to);
     if (!u || !v || u.dist === Infinity) return;
     if (u.dist + e.weight < v.dist) {
       hasNegCycle = true;
@@ -271,13 +271,13 @@ function generateBellman(startId) {
 
 // --- PRIM ---
 function generatePrim(startId) {
-  nodes.forEach(n => { n.state='unvisited'; n.dist=Infinity; });
+  nodes.forEach(n => { n.state = 'unvisited'; n.dist = Infinity; });
   edges.forEach(e => e.state = 'default');
 
   const inMST = new Set([startId]);
-  nodes.find(n=>n.id===startId).state = 'visited';
+  nodes.find(n => n.id === startId).state = 'visited';
   const mstCost = { total: 0 };
-  snapshot(1, `Bắt đầu MST từ ${nodes.find(n=>n.id===startId).label}`, 'info', { mstEdges: [], mstCost: 0 });
+  snapshot(1, `Bắt đầu MST từ ${nodes.find(n => n.id === startId).label}`, 'info', { mstEdges: [], mstCost: 0 });
 
   while (inMST.size < nodes.length) {
     let best = null;
@@ -297,13 +297,13 @@ function generatePrim(startId) {
       break;
     }
 
-    const nb = nodes.find(n=>n.id===best.outsideId);
+    const nb = nodes.find(n => n.id === best.outsideId);
     nb.state = 'active';
     snapshot(5, `Xét thêm nút ${nb.label} với cạnh w=${best.weight}`, 'info', {});
 
     nb.state = 'visited';
     inMST.add(best.outsideId);
-    const e = edges.find(ed=>ed.id===best.id);
+    const e = edges.find(ed => ed.id === best.id);
     if (e) e.state = 'path';
     mstCost.total += best.weight;
 

@@ -123,7 +123,7 @@ function drawWeightLabel(w, x, y, state) {
   const defaultColor = getCSSVar('--canvas-weight-color');
   const color = w < 0 ? negColor : (state === 'path' ? pathColor : defaultColor);
   ctx.save();
-  ctx.font = '600 12px "Fira Code", monospace';
+  ctx.font = '600 12px "JetBrains Mono", monospace';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = getCSSVar('--canvas-weight-bg');
@@ -155,7 +155,7 @@ function drawNode(n) {
   ctx.lineWidth = bw;
   ctx.stroke();
 
-  ctx.font = `600 13px "Space Grotesk", sans-serif`;
+  ctx.font = `600 13px "Montserrat", sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = n.state === 'unvisited' ? getCSSVar('--canvas-node-text') : getCSSVar('--canvas-node-text-active');
@@ -163,7 +163,7 @@ function drawNode(n) {
 
   // Distance label above node
   if (n.dist !== undefined && n.dist !== Infinity && n.state !== 'unvisited' && currentAlgo.weighted) {
-    ctx.font = '500 10px "Fira Code", monospace';
+    ctx.font = '500 10px "JetBrains Mono", monospace';
     ctx.fillStyle = '#FCD34D';
     ctx.textAlign = 'center';
     ctx.fillText(n.dist, n.x, n.y - NODE_R - 8);

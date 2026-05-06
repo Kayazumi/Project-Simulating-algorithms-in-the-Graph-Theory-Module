@@ -207,7 +207,7 @@
   .panel-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
   .pseudocode-block {
-    font-family: 'Fira Code', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
     line-height: 1.8;
     color: var(--text-dim);
@@ -266,7 +266,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.75rem;
-    font-family: 'Fira Code', monospace;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   .dist-table th {
@@ -305,7 +305,7 @@
   .queue-item {
     padding: 3px 10px;
     border-radius: 5px;
-    font-family: 'Fira Code', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
     font-weight: 500;
     border: 1px solid;
@@ -378,7 +378,7 @@
   .ctrl-btn.active { background: rgba(99,102,241,0.2); border-color: var(--accent); color: #A5B4FC; }
 
   .step-info {
-    font-family: 'Fira Code', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
     color: var(--text-muted);
     padding: 0 8px;
@@ -478,7 +478,7 @@
     background: rgba(255,255,255,0.08);
     border: 1px solid var(--border);
     border-radius: 4px;
-    font-family: 'Fira Code', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.65rem;
     color: var(--text-dim);
   }
@@ -517,7 +517,7 @@
     padding: 8px 12px;
     color: var(--text);
     font-size: 0.9rem;
-    font-family: 'Fira Code', monospace;
+    font-family: 'JetBrains Mono', monospace;
     outline: none;
   }
   .modal input[type=number]:focus { border-color: var(--accent); }

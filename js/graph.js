@@ -57,6 +57,7 @@ function loadExample() {
   edgeCounter = 0;
   simSteps = [];
   currentStep = -1;
+  algorithmResult = [];
 
   const cx = W / 2, cy = H / 2;
 
@@ -124,6 +125,7 @@ function clearGraph() {
   edgeCounter = 0;
   simSteps = [];
   currentStep = -1;
+  algorithmResult = [];
   updateNodeSelects();
   updateUI();
   draw();
