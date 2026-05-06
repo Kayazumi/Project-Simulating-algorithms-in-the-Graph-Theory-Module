@@ -274,10 +274,28 @@ function runAlgorithm() {
   if (simSteps.length > 0) {
     addLog(`Bắt đầu ${currentAlgo.name} từ nút ${nodes.find(n => n.id === startId)?.label}`, 'info');
 
-    // Áp dụng ngay bước cuối để hiển thị kết quả và ghi log hoàn thành
-    currentStep = simSteps.length - 1;
+    currentStep = 0;
     applyStep(currentStep);
     updateUI();
+
+    // Luôn tự động phát từ đầu khi bấm "Chạy lại"
+    isPlaying = true;
+    const btn = document.getElementById('btn-play');
+    btn.textContent = '⏸';
+    btn.classList.add('active');
+    const spd = document.getElementById('speed-slider').value;
+    playTimer = setInterval(() => {
+      if (currentStep >= simSteps.length - 1) {
+        isPlaying = false;
+        clearInterval(playTimer);
+        btn.textContent = '▶';
+        btn.classList.remove('active');
+        return;
+      }
+      currentStep++;
+      applyStep(currentStep);
+      updateUI();
+    }, SPEEDS[spd]);
   }
 }
 
@@ -394,13 +412,8 @@ function updateDataInspector(step) {
 function togglePlay() {
   if (simSteps.length === 0) {
     runAlgorithm();
-    // runAlgorithm() đã nhảy tới bước cuối, reset về đầu để phát từng bước
-    if (simSteps.length > 0) {
-      currentStep = 0;
-      applyStep(0);
-      updateUI();
-    }
-    // Không return — tiếp tục xuống để khởi động interval
+    // runAlgorithm() đã auto-play rồi, không cần toggle thêm
+    return;
   }
 
   // Nếu đang ở bước cuối, quay lại đầu để phát lại
@@ -436,7 +449,30 @@ function togglePlay() {
 }
 
 function stepForward() {
-  if (simSteps.length === 0) { runAlgorithm(); return; }
+  if (simSteps.length === 0) {
+    // Generate steps nhưng không auto-play, chỉ hiện bước đầu
+    if (nodes.length === 0) { showWarning('Vui lòng thêm nút vào đồ thị!'); return; }
+    nodes.forEach(n => { n.state = 'unvisited'; n.dist = Infinity; n.prev = null; });
+    edges.forEach(e => { e.state = e.weight < 0 ? 'negative' : 'default'; });
+    const startId = parseInt(document.getElementById('start-node-select').value);
+    simSteps = [];
+    currentStep = -1;
+    document.getElementById('step-log').innerHTML = '';
+    switch (currentAlgo.id) {
+      case 'dfs': generateDFS(startId); break;
+      case 'bfs': generateBFS(startId); break;
+      case 'dijkstra': generateDijkstra(startId); break;
+      case 'bellman': generateBellman(startId); break;
+      case 'prim': generatePrim(startId); break;
+    }
+    if (simSteps.length > 0) {
+      addLog(`Bắt đầu ${currentAlgo.name} từ nút ${nodes.find(n => n.id === startId)?.label}`, 'info');
+      currentStep = 0;
+      applyStep(currentStep);
+      updateUI();
+    }
+    return;
+  }
   if (currentStep < simSteps.length - 1) {
     currentStep++;
     applyStep(currentStep);

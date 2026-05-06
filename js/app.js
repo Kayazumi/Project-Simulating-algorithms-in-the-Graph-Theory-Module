@@ -136,6 +136,9 @@ function openSim(algoId) {
   currentStep = -1;
   isPlaying = false;
   if (playTimer) clearInterval(playTimer);
+  // Reset nút play về trạng thái dừng (▶)
+  const btnPlay = document.getElementById('btn-play');
+  if (btnPlay) { btnPlay.textContent = '▶'; btnPlay.classList.remove('active'); }
 
   // Init canvas
   setTimeout(() => {

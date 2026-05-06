@@ -49,6 +49,8 @@ function updateNodeSelects() {
 // ===================================================
 function loadExample() {
   if (isPlaying) { isPlaying = false; clearInterval(playTimer); }
+  const btnPlay = document.getElementById('btn-play');
+  if (btnPlay) { btnPlay.textContent = '▶'; btnPlay.classList.remove('active'); }
   nodes = [];
   edges = [];
   nodeCounter = 0;
@@ -114,6 +116,8 @@ function loadExample() {
 
 function clearGraph() {
   if (isPlaying) { isPlaying = false; clearInterval(playTimer); }
+  const btnPlay = document.getElementById('btn-play');
+  if (btnPlay) { btnPlay.textContent = '▶'; btnPlay.classList.remove('active'); }
   nodes = [];
   edges = [];
   nodeCounter = 0;
