@@ -130,65 +130,78 @@ const ALGORITHMS = [
 // ===================================================
 const PSEUDOCODES = {
   dfs: [
-    'procedure DFS(graph, start):',
-    '  stack ← [start]',
-    '  visited ← {}',
-    '  while stack is not empty:',
-    '    node ← stack.pop()',
-    '    if node not in visited:',
-    '      mark node as visited',
-    '      for each neighbor of node:',
-    '        if neighbor not visited:',
-    '          stack.push(neighbor)',
+    'Hàm DFS(Đồ_thị, Nút_bắt_đầu):',                       // 0
+    '  Khởi tạo ngăn xếp Stack rỗng',                      // 1
+    '  Đẩy Nút_bắt_đầu vào Stack',                         // 2
+    '  Khởi tạo tập Visited để lưu các nút đã thăm',       // 3
+    '  Trong khi Stack không rỗng:',                       // 4
+    '    Lấy nút U ra khỏi đỉnh Stack (pop)',              // 5
+    '    Nếu U đã nằm trong Visited:',                     // 6
+    '      Bỏ qua nút này (continue)',                     // 7
+    '    Đánh dấu U là đã thăm (thêm vào Visited)',        // 8
+    '    Với mỗi nút kề V của U:',                         // 9
+    '      Nếu V chưa được thăm:',                         // 10
+    '        Đẩy V vào Stack',                             // 11
+    '  (Kết thúc) Thuật toán hoàn thành',                  // 12
   ],
   bfs: [
-    'procedure BFS(graph, start):',
-    '  queue ← [start]',
-    '  visited ← {start}',
-    '  while queue is not empty:',
-    '    node ← queue.dequeue()',
-    '    process node',
-    '    for each neighbor of node:',
-    '      if neighbor not visited:',
-    '        visited.add(neighbor)',
-    '        queue.enqueue(neighbor)',
+    'Hàm BFS(Đồ_thị, Nút_bắt_đầu):',                       // 0
+    '  Khởi tạo Hàng đợi Queue rỗng',                      // 1
+    '  Đẩy Nút_bắt_đầu vào Queue',                         // 2
+    '  Đánh dấu Nút_bắt_đầu là đã thăm',                   // 3
+    '  Trong khi Queue không rỗng:',                       // 4
+    '    Lấy nút U ra khỏi đầu Queue (shift)',             // 5
+    '    Xử lý nút U',                                     // 6
+    '    Với mỗi nút kề V của U:',                         // 7
+    '      Nếu V chưa được thăm:',                         // 8
+    '        Đánh dấu V là đã thăm',                       // 9
+    '        Đẩy V vào cuối Queue',                        // 10
+    '  (Kết thúc) Thuật toán hoàn thành',                  // 11
   ],
   dijkstra: [
-    'procedure DIJKSTRA(graph, src):',
-    '  dist[src] ← 0; dist[others] ← ∞',
-    '  pq ← [(0, src)]',
-    '  while pq is not empty:',
-    '    (d, u) ← pq.extract_min()',
-    '    if d > dist[u]: continue',
-    '    mark u as visited',
-    '    for each edge (u, v, w):',
-    '      if dist[u] + w < dist[v]:',
-    '        dist[v] ← dist[u] + w',
-    '        pq.insert((dist[v], v))',
+    'Hàm DIJKSTRA(Đồ_thị, Nút_nguồn):',                    // 0
+    '  Khởi tạo khoảng cách dist[u] = ∞ cho mọi nút',      // 1
+    '  dist[Nút_nguồn] = 0',                               // 2
+    '  Khởi tạo Hàng đợi ưu tiên PQ rỗng',                 // 3
+    '  Thêm (khoảng cách 0, Nút_nguồn) vào PQ',            // 4
+    '  Trong khi PQ không rỗng:',                          // 5
+    '    Lấy ra (d, U) có d nhỏ nhất từ PQ',               // 6
+    '    Nếu d > dist[U] (đã tìm được đường tốt hơn):',    // 7
+    '      Bỏ qua nút U (continue)',                       // 8
+    '    Đánh dấu U là đã xét xong',                       // 9
+    '    Với mỗi cạnh (U, V) có trọng số W:',              // 10
+    '      Nếu dist[U] + W < dist[V]:',                    // 11
+    '        Cập nhật dist[V] = dist[U] + W',              // 12
+    '        Ghi nhận U là nút trước của V (để truy vết)', // 13
+    '        Thêm (dist[V], V) vào PQ',                    // 14
+    '  (Kết thúc) Trả về mảng dist và đường đi',           // 15
   ],
   bellman: [
-    'procedure BELLMAN_FORD(graph, src):',
-    '  dist[src] ← 0; dist[others] ← ∞',
-    '  for i ← 1 to |V| - 1:',
-    '    for each edge (u, v, w):',
-    '      if dist[u] + w < dist[v]:',
-    '        dist[v] ← dist[u] + w',
-    '  for each edge (u, v, w):',
-    '    if dist[u] + w < dist[v]:',
-    '      return "Negative cycle detected!"',
-    '  return dist',
+    'Hàm BELLMAN_FORD(Đồ_thị, Nút_nguồn):',                // 0
+    '  Khởi tạo mảng khoảng cách dist[u] = ∞',             // 1
+    '  Đặt dist[Nút_nguồn] = 0',                           // 2
+    '  Lặp (Số_đỉnh - 1) lần:',                            // 3
+    '    Duyệt qua TẤT CẢ các cạnh (U, V) có trọng số W:', // 4
+    '      Nếu dist[U] ≠ ∞ VÀ dist[U] + W < dist[V]:',     // 5
+    '        Cập nhật dist[V] = dist[U] + W',              // 6
+    '        Ghi nhận U là nút trước của V',               // 7
+    '  Duyệt lại TẤT CẢ các cạnh một lần nữa:',            // 8
+    '    Nếu vẫn tồn tại dist[U] + W < dist[V]:',          // 9
+    '      Báo lỗi "Phát hiện chu trình âm!"',             // 10
+    '  (Kết thúc) Trả về mảng dist',                       // 11
   ],
   prim: [
-    'procedure PRIM(graph, start):',
-    '  inMST ← {start}',
-    '  mst_edges ← []',
-    '  pq ← all edges from start',
-    '  while pq not empty:',
-    '    (w, u, v) ← pq.extract_min()',
-    '    if v in inMST: continue',
-    '    add (u, v, w) to mst_edges',
-    '    inMST.add(v)',
-    '    for each edge (v, x, w2):',
-    '      if x not in inMST: pq.insert((w2, v, x))',
+    'Hàm PRIM(Đồ_thị, Nút_bắt_đầu):',                      // 0
+    '  Khởi tạo tập inMST chứa Nút_bắt_đầu',               // 1
+    '  Khởi tạo tổng trọng số mstCost = 0',                // 2
+    '  Trong khi tập inMST chưa chứa đủ tất cả các nút:',  // 3
+    '    Tìm cạnh (U, V) có trọng số W nhỏ nhất thỏa mãn:',// 4
+    '    U thuộc inMST VÀ V không thuộc inMST',            // 5
+    '    Nếu không tìm được cạnh nào:',                    // 6
+    '      Dừng thuật toán (Đồ thị không liên thông)',     // 7
+    '    Thêm V vào tập inMST',                            // 8
+    '    Thêm cạnh (U, V) vào kết quả cây khung',          // 9
+    '    Cộng W vào mstCost',                              // 10
+    '  (Kết thúc) Trả về cây khung và mstCost',            // 11
   ],
 };

@@ -328,6 +328,8 @@ function applyStep(idx) {
         }
       }
     }
+  } else if (idx < simSteps.length - 1) {
+    algorithmResult = [];
   }
 
   highlightCodeLine(step.codeLine);

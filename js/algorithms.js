@@ -48,19 +48,19 @@ function generateDFS(startId) {
     stackArr.pop();
     const curNode = nodes.find(n => n.id === cur);
 
-    snapshot(4, `Lấy nút ${curNode.label} từ ngăn xếp`, 'info', { queue: [...stackArr] });
+    snapshot(5, `Lấy nút ${curNode.label} từ ngăn xếp`, 'info', { queue: [...stackArr] });
 
     if (visited.has(cur)) {
-      snapshot(5, `${curNode.label} đã thăm — bỏ qua`, 'warning', { queue: [...stackArr] });
+      snapshot(7, `${curNode.label} đã thăm — bỏ qua`, 'warning', { queue: [...stackArr] });
       continue;
     }
 
     visited.add(cur);
     curNode.state = 'active';
-    snapshot(6, `Đánh dấu ${curNode.label} là đang xử lý`, 'info', { queue: [...stackArr] });
+    snapshot(8, `Đánh dấu ${curNode.label} là đang xử lý`, 'info', { queue: [...stackArr] });
 
     curNode.state = 'visited';
-    snapshot(6, `Hoàn thành thăm nút ${curNode.label}`, 'success', { queue: [...stackArr] });
+    snapshot(8, `Hoàn thành thăm nút ${curNode.label}`, 'success', { queue: [...stackArr] });
 
     // Neighbors
     const neighbors = edges
@@ -73,7 +73,7 @@ function generateDFS(startId) {
       edge.state = 'traversed';
       nb.state = 'active';
       stackArr.push(id);
-      snapshot(8, `Thêm ${nb.label} vào ngăn xếp`, 'info', { queue: [...stackArr] });
+      snapshot(11, `Thêm ${nb.label} vào ngăn xếp`, 'info', { queue: [...stackArr] });
       nb.state = 'unvisited';
     }
   }
@@ -82,11 +82,11 @@ function generateDFS(startId) {
   nodes.forEach(n => {
     if (!visited.has(n.id)) {
       n.state = 'unvisited';
-      snapshot(9, `Nút ${n.label} không thể đến được (đồ thị không liên thông)`, 'warning', { queue: [] });
+      snapshot(12, `Nút ${n.label} không thể đến được (đồ thị không liên thông)`, 'warning', { queue: [] });
     }
   });
 
-  snapshot(9, 'DFS hoàn thành!', 'success', { queue: [] });
+  snapshot(12, 'DFS hoàn thành!', 'success', { queue: [] });
 }
 
 // --- BFS ---
@@ -97,16 +97,16 @@ function generateBFS(startId) {
   const visited = new Set([startId]);
   const queue = [startId];
   nodes.find(n => n.id === startId).state = 'active';
-  snapshot(1, `Khởi tạo hàng đợi với ${nodes.find(n => n.id === startId).label}`, 'info', { queue: [...queue] });
+  snapshot(2, `Khởi tạo hàng đợi với ${nodes.find(n => n.id === startId).label}`, 'info', { queue: [...queue] });
 
   while (queue.length > 0) {
     const cur = queue.shift();
     const curNode = nodes.find(n => n.id === cur);
     curNode.state = 'active';
-    snapshot(4, `Lấy ${curNode.label} từ hàng đợi`, 'info', { queue: [...queue] });
+    snapshot(5, `Lấy ${curNode.label} từ hàng đợi`, 'info', { queue: [...queue] });
 
     curNode.state = 'visited';
-    snapshot(5, `Xử lý nút ${curNode.label}`, 'success', { queue: [...queue] });
+    snapshot(6, `Xử lý nút ${curNode.label}`, 'success', { queue: [...queue] });
 
     const neighbors = edges
       .filter(e => e.from === cur || (!isDirected && e.to === cur))
@@ -119,11 +119,11 @@ function generateBFS(startId) {
       edge.state = 'traversed';
       nb.state = 'active';
       queue.push(id);
-      snapshot(9, `Đưa ${nb.label} vào hàng đợi`, 'info', { queue: [...queue] });
+      snapshot(10, `Đưa ${nb.label} vào hàng đợi`, 'info', { queue: [...queue] });
     }
   }
 
-  snapshot(9, 'BFS hoàn thành!', 'success', { queue: [] });
+  snapshot(11, 'BFS hoàn thành!', 'success', { queue: [] });
 }
 
 // --- DIJKSTRA ---
@@ -132,7 +132,7 @@ function generateDijkstra(startId) {
   edges.forEach(e => e.state = 'default');
 
   nodes.find(n => n.id === startId).dist = 0;
-  snapshot(1, 'Khởi tạo khoảng cách: src=0, others=∞', 'info', { distances: getDistMap() });
+  snapshot(2, 'Khởi tạo khoảng cách: src=0, others=∞', 'info', { distances: getDistMap() });
 
   // Simple priority queue as sorted array
   const pq = [{ cost: 0, id: startId }];
@@ -144,7 +144,7 @@ function generateDijkstra(startId) {
     const curNode = nodes.find(n => n.id === cur);
 
     if (cost > curNode.dist) {
-      snapshot(5, `Bỏ qua ${curNode.label} (đã có đường tốt hơn)`, 'warning', { distances: getDistMap() });
+      snapshot(8, `Bỏ qua ${curNode.label} (đã có đường tốt hơn)`, 'warning', { distances: getDistMap() });
       continue;
     }
 
@@ -152,7 +152,7 @@ function generateDijkstra(startId) {
     visited.add(cur);
 
     curNode.state = 'active';
-    snapshot(4, `Xét nút ${curNode.label} (dist=${curNode.dist})`, 'info', { distances: getDistMap() });
+    snapshot(9, `Xét nút ${curNode.label} (dist=${curNode.dist})`, 'info', { distances: getDistMap() });
 
     // Neighbors
     edges.filter(e => e.from === cur || (!isDirected && e.to === cur))
@@ -161,13 +161,13 @@ function generateDijkstra(startId) {
         const nb = nodes.find(n => n.id === nbId);
         if (visited.has(nbId)) return;
         const newDist = curNode.dist + e.weight;
-        snapshot(8, `Xét cạnh ${curNode.label}→${nb.label} (w=${e.weight})`, 'info', { distances: getDistMap() });
+        snapshot(10, `Xét cạnh ${curNode.label}→${nb.label} (w=${e.weight})`, 'info', { distances: getDistMap() });
         if (newDist < nb.dist) {
           nb.dist = newDist;
           nb.prev = cur;
           e.state = 'traversed';
           pq.push({ cost: newDist, id: nbId });
-          snapshot(9, `Cập nhật dist[${nb.label}] = ${newDist}`, 'success', { distances: getDistMap() });
+          snapshot(12, `Cập nhật dist[${nb.label}] = ${newDist}`, 'success', { distances: getDistMap() });
         }
       });
 
@@ -176,7 +176,7 @@ function generateDijkstra(startId) {
 
   // Highlight path if target selected
   highlightShortestPath(startId);
-  snapshot(10, 'Dijkstra hoàn thành!', 'success', { distances: getDistMap() });
+  snapshot(15, 'Dijkstra hoàn thành!', 'success', { distances: getDistMap() });
 }
 
 function getDistMap() {
@@ -217,12 +217,12 @@ function generateBellman(startId) {
   edges.forEach(e => e.state = e.weight < 0 ? 'negative' : 'default');
 
   nodes.find(n => n.id === startId).dist = 0;
-  snapshot(1, 'Khởi tạo: src=0, others=∞', 'info', { distances: getDistMap() });
+  snapshot(2, 'Khởi tạo: src=0, others=∞', 'info', { distances: getDistMap() });
 
   const V = nodes.length;
 
   for (let i = 1; i <= V - 1; i++) {
-    snapshot(2, `Vòng lặp thứ ${i}/${V - 1}`, 'info', { distances: getDistMap() });
+    snapshot(3, `Vòng lặp thứ ${i}/${V - 1}`, 'info', { distances: getDistMap() });
     let changed = false;
 
     edges.forEach(e => {
@@ -239,12 +239,12 @@ function generateBellman(startId) {
         u.state = 'visited';
         e.state = 'traversed';
         changed = true;
-        snapshot(5, `Giảm dist[${v.label}] = ${v.dist}`, 'success', { distances: getDistMap() });
+        snapshot(6, `Giảm dist[${v.label}] = ${v.dist}`, 'success', { distances: getDistMap() });
       }
     });
 
     if (!changed) {
-      snapshot(5, `Vòng lặp ${i}: không có cập nhật — dừng sớm`, 'success', { distances: getDistMap() });
+      snapshot(3, `Vòng lặp ${i}: không có cập nhật — dừng sớm`, 'success', { distances: getDistMap() });
       break;
     }
   }
@@ -262,10 +262,10 @@ function generateBellman(startId) {
   });
 
   if (hasNegCycle) {
-    snapshot(8, '⚠ Phát hiện chu trình âm!', 'error', { distances: getDistMap() });
+    snapshot(10, '⚠ Phát hiện chu trình âm!', 'error', { distances: getDistMap() });
     showWarning('Phát hiện chu trình âm trong đồ thị!');
   } else {
-    snapshot(9, 'Bellman-Ford hoàn thành!', 'success', { distances: getDistMap() });
+    snapshot(11, 'Bellman-Ford hoàn thành!', 'success', { distances: getDistMap() });
   }
 }
 
@@ -293,13 +293,13 @@ function generatePrim(startId) {
     });
 
     if (!best) {
-      snapshot(4, 'Đồ thị không liên thông — không tìm được MST hoàn chỉnh', 'warning', {});
+      snapshot(7, 'Đồ thị không liên thông — không tìm được MST hoàn chỉnh', 'warning', {});
       break;
     }
 
     const nb = nodes.find(n => n.id === best.outsideId);
     nb.state = 'active';
-    snapshot(5, `Xét thêm nút ${nb.label} với cạnh w=${best.weight}`, 'info', {});
+    snapshot(4, `Xét thêm nút ${nb.label} với cạnh w=${best.weight}`, 'info', {});
 
     nb.state = 'visited';
     inMST.add(best.outsideId);
@@ -307,9 +307,9 @@ function generatePrim(startId) {
     if (e) e.state = 'path';
     mstCost.total += best.weight;
 
-    snapshot(7, `Thêm cạnh vào MST (w=${best.weight}). Tổng=${mstCost.total}`, 'success', { mstCost: mstCost.total });
+    snapshot(9, `Thêm cạnh vào MST (w=${best.weight}). Tổng=${mstCost.total}`, 'success', { mstCost: mstCost.total });
   }
 
   nodes.forEach(n => { if (n.state === 'visited') n.state = 'path'; });
-  snapshot(10, `MST hoàn thành! Tổng trọng số: ${mstCost.total}`, 'success', { mstCost: mstCost.total });
+  snapshot(11, `MST hoàn thành! Tổng trọng số: ${mstCost.total}`, 'success', { mstCost: mstCost.total });
 }
